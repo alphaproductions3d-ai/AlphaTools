@@ -1,5 +1,8 @@
 # Alpha Tools
 
+> **Download / Descarga:** to install, get the ZIP files from the **[Releases page](https://github.com/alphaproductions3d-ai/AlphaTools/releases/latest)** (section *Assets*). Do not use *Code > Download ZIP*: that downloads the source code, which is not installable.
+> Para instalar, descarga los archivos ZIP desde la **[página de Releases](https://github.com/alphaproductions3d-ai/AlphaTools/releases/latest)** (sección *Assets*). No uses *Code > Download ZIP*: eso descarga el código fuente, que no se instala.
+
 **EN** — Alpha Tools takes a Mixamo-rigged character from Blender to a playable third-person character in Unreal Engine 5.8. It has two parts that are meant to be used together:
 
 - **Alpha Send to Unreal** (`blender-addon/`): a Blender add-on that exports the FBX, copies the textures with standard names and writes a `manifest.json`.
