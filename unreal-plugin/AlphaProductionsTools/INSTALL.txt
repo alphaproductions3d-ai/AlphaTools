@@ -1,0 +1,6 @@
+ALPHA TOOLS - install (once per Unreal project)
+1. Copy the folder "AlphaProductionsTools" into  <your project>/Plugins   (create "Plugins" if it does not exist).
+2. Open the project. If Unreal asks, enable the plugin "Alpha Tools" (folder AlphaProductionsTools) (Edit > Plugins) and restart.
+3. The top menu bar now has "Alpha Tools". Select your character's Skeletal Mesh in the Content Browser and use it.
+The menu entry "Manual" opens the full manual (Docs/manual.html).
+Alpha Productions - alphaproductions3d@gmail.com

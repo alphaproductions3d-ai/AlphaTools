@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Tools - Documentation</title>
+    <link rel="icon" href="assets/favicon_alpha_productions.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Alpha Brand */
+            --alpha-orange: #F25C22;
+            
+            /* Dark Theme Colors - Extra Dark Contrast */
+            --bg-base: #030508; 
+            --bg-sidebar: rgba(6, 9, 15, 0.85); 
+            --bg-header: rgba(3, 5, 8, 0.95);
+            --bg-card: #080c14; 
+            --bg-code: #05070a;
+            --text-main: #f3f4f6;
+            --text-muted: #8b95a5;
+            --border-color: rgba(255, 255, 255, 0.05);
+            
+            /* Callouts */
+            --warning-bg: rgba(245, 158, 11, 0.08);
+            --warning-border: #f59e0b;
+            --info-bg: rgba(59, 130, 246, 0.08);
+            --info-border: #3b82f6;
+            --danger-bg: rgba(239, 68, 68, 0.08);
+            --danger-border: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        h1 { font-size: 2.75rem; letter-spacing: -0.03em; margin-bottom: 1.5rem; font-weight: 700; }
+        h2 { font-size: 1.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin: 3rem 0 1.5rem 0; font-weight: 600; }
+        h3 { font-size: 1.25rem; margin: 2rem 0 1rem 0; font-weight: 600; color: var(--alpha-orange); }
+        p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.5rem; color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; }
+        strong { color: var(--text-main); font-weight: 600; }
+
+        /* SIDEBAR */
+        .sidebar { width: 300px; background: var(--bg-sidebar); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-right: 1px solid var(--border-color); position: fixed; height: 100vh; padding: 2.5rem 2rem; display: flex; flex-direction: column; z-index: 100; justify-content: space-between; overflow-y: auto;}
+        
+        .sidebar-top { display: flex; flex-direction: column; gap: 1rem; }
+        
+        .main-content { flex: 1; margin-left: 300px; display: flex; flex-direction: column; }
+        .content-container { max-width: 900px; padding: 2rem 4rem 40vh 4rem; }
+
+        .top-header { position: sticky; top: 0; background: var(--bg-header); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 4rem; display: flex; justify-content: flex-end; align-items: center; z-index: 90; }
+
+        /* MULTILINGUAL SWITCH ONLY */
+        .switch-container { display: flex; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 20px; padding: 3px; position: relative; cursor: pointer; align-items: center; width: 100px; }
+        .switch-option { flex: 1; padding: 0.3rem 0; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-align: center; border-radius: 18px; transition: color 0.3s ease; z-index: 2; }
+        .switch-option.active { color: #fff; }
+        .switch-slider { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: var(--alpha-orange); border-radius: 18px; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
+        .switch-container.right .switch-slider { transform: translateX(100%); }
+
+        .logo-container { margin-bottom: 2rem; }
+        .logo-container img { max-width: 180px; height: auto; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
+
+        .nav-links { list-style: none; margin-left: 0; flex-grow: 1; }
+        .nav-links li { margin-bottom: 0.25rem; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.95rem; display: block; padding: 0.6rem 1rem; border-radius: 8px; transition: all 0.2s ease; }
+        .nav-links a:hover { color: var(--text-main); background: rgba(255,255,255,0.03); }
+        .nav-links a.active { background: rgba(242, 92, 34, 0.1); color: var(--alpha-orange); font-weight: 600; }
+
+        /* SOCIAL HUB & FOOTER */
+        .sidebar-bottom { margin-top: 2rem; }
+        .sidebar, html { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+        .sidebar::-webkit-scrollbar, html::-webkit-scrollbar { width: 8px; }
+        .sidebar::-webkit-scrollbar-track, html::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb, html::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 8px; }
+        .sidebar::-webkit-scrollbar-thumb:hover, html::-webkit-scrollbar-thumb:hover { background: var(--alpha-orange); }
+
+        .social-hub { border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .social-hub-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-bottom: 1rem; }
+        .social-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        
+        .social-icon { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 50%; transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); text-decoration: none; overflow: hidden;}
+        .social-icon:hover { border-color: var(--alpha-orange); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(242, 92, 34, 0.2); }
+        
+        .social-icon svg { width: 18px; height: 18px; fill: var(--text-muted); transition: fill 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); stroke: none; }
+        .social-icon.stroke-icon svg { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; transition: stroke 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
+        
+        .social-icon:hover svg { fill: var(--alpha-orange); }
+        .social-icon.stroke-icon:hover svg { stroke: var(--alpha-orange); fill: none; }
+
+        .svg-external { 
+            width: 18px; height: 18px; 
+            filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(735%) hue-rotate(181deg) brightness(93%) contrast(89%);
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .social-icon:hover .svg-external {
+            filter: brightness(0) saturate(100%) invert(47%) sepia(87%) saturate(2405%) hue-rotate(346deg) brightness(99%) contrast(93%);
+        }
+        
+        .footer-copy { font-size: 0.75rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.5; }
+
+        /* COMPONENTS */
+        .callout { padding: 1.25rem 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid; background: var(--bg-card); }
+        .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning-border); }
+        .callout.warning .callout-title { color: var(--warning-border); }
+        .callout.info { background: var(--info-bg); border-left-color: var(--info-border); }
+        .callout.info .callout-title { color: var(--info-border); }
+        .callout.danger { background: var(--danger-bg); border-left-color: var(--danger-border); }
+        .callout.danger .callout-title { color: var(--danger-border); }
+
+        .code-block { background: var(--bg-code); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; position: relative; margin: 1.5rem 0; font-family: monospace; font-size: 0.9rem; color: #e2e8f0; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.05); border: none; color: #fff; padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: background 0.2s; }
+        .copy-btn:hover { background: var(--alpha-orange); }
+
+        .img-container { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; margin: 1.5rem 0; cursor: zoom-in; background: var(--bg-card); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
+        .img-container img { width: 100%; display: block; transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .img-container:hover { border-color: var(--alpha-orange); box-shadow: 0 0 15px rgba(242, 92, 34, 0.4); }
+        .img-container:hover img { transform: scale(1.03); }
+
+        .video-container { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; margin: 2rem 0; background: #000; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .video-container video { width: 100%; display: block; }
+        
+        .accordion { margin-top: 1.5rem; }
+        .accordion-item { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; background: var(--bg-card); overflow: hidden; }
+        .accordion-header { width: 100%; padding: 1.25rem 1.5rem; background: transparent; border: none; color: var(--text-main); font-size: 1.05rem; font-weight: 600; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .accordion-header:hover { background: rgba(255, 255, 255, 0.02); }
+        .accordion-header::after { content: '+'; font-size: 1.5rem; font-weight: 400; color: var(--alpha-orange); transition: transform 0.3s ease; }
+        .accordion-header.active::after { transform: rotate(45deg); }
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content { padding: 0 1.5rem 1.25rem 1.5rem; color: var(--text-muted); }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(5px); }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+
+        .lang-es { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container">
+                <img src="assets/logo_alpha_productions.svg" alt="Alpha Productions Logo">
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#overview" class="active"><span class="lang-en">Overview</span><span class="lang-es">Resumen</span></a></li>
+                <li><a href="#requirements"><span class="lang-en">Requirements</span><span class="lang-es">Requisitos</span></a></li>
+                <li><a href="#installation"><span class="lang-en">Installation</span><span class="lang-es">Instalación</span></a></li>
+                <li><a href="#workflow"><span class="lang-en">Workflow</span><span class="lang-es">Flujo de trabajo</span></a></li>
+                <li><a href="#menu"><span class="lang-en">Unreal menu</span><span class="lang-es">Menú de Unreal</span></a></li>
+                <li><a href="#transparency"><span class="lang-en">Glass, cutout, emission</span><span class="lang-es">Vidrio, cutout, emisión</span></a></li>
+                <li><a href="#changes"><span class="lang-en">What it changes</span><span class="lang-es">Qué cambia</span></a></li>
+                <li><a href="#faq"><span class="lang-en">FAQ / Troubleshooting</span><span class="lang-es">FAQ / Problemas</span></a></li>
+                <li><a href="#known"><span class="lang-en">Known issues</span><span class="lang-es">Problemas conocidos</span></a></li>
+                <li><a href="#changelog"><span class="lang-en">Changelog</span><span class="lang-es">Cambios</span></a></li>
+                <li><a href="#support"><span class="lang-en">Support & license</span><span class="lang-es">Soporte y licencia</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="social-hub">
+                <div class="social-hub-title"><span class="lang-en">Official Links</span><span class="lang-es">Enlaces Oficiales</span></div>
+                <div class="social-grid">
+                    <!-- YouTube (Inline SVG) -->
+                    <a href="https://www.youtube.com/@AlphaProductions-UE5-blen" target="_blank" class="social-icon" title="YouTube">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <!-- ArtStation (External SVG File) -->
+                    <a href="https://www.artstation.com/alpha-productions" target="_blank" class="social-icon" title="ArtStation">
+                        <img src="assets/icon_artstation.svg" class="svg-external" alt="ArtStation">
+                    </a>
+                    <!-- Sketchfab (Inline SVG) -->
+                    <a href="https://sketchfab.com/Alpha-Productions" target="_blank" class="social-icon stroke-icon" title="Sketchfab">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1.5L2 7.3v9.4L12 22.5l10-5.8V7.3L12 1.5zm0 2.2l8 4.6-8 4.6-8-4.6 8-4.6zm0 16.6l-8-4.6v-7l8 4.6v7zm1-7l8-4.6v7l-8 4.6v-7z"/></svg>
+                    </a>
+                    <!-- LinkedIn (Inline SVG) -->
+                    <a href="https://www.linkedin.com/in/noel-bolaños" target="_blank" class="social-icon" title="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm13.5 12.3h-3v-5.6c0-3.4-4-3.1-4 0v5.6h-3v-11h3v1.8c1.4-2.6 7-2.8 7 2.5v6.7z"/></svg>
+                    </a>
+                    <!-- Instagram (Inline SVG) -->
+                    <a href="https://www.instagram.com/alphaproductions_3d/" target="_blank" class="social-icon stroke-icon" title="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <!-- X (Inline SVG) -->
+                    <a href="https://x.com/AlphaProd3D" target="_blank" class="social-icon" title="X">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+                <div class="footer-copy">
+                    © 2026 Alpha Productions.<br>
+                    <span class="lang-en">All rights reserved.</span><span class="lang-es">Todos los derechos reservados.</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="switch-container" id="langSwitch" onclick="toggleLanguage()" title="Switch Language">
+                <div class="switch-slider"></div>
+                <div class="switch-option active" id="langEnTxt">EN</div>
+                <div class="switch-option" id="langEsTxt">ES</div>
+            </div>
+        </header>
+
+        <div class="content-container">
+            <section id="overview" class="content-section">
+<h1><span class="lang-en">Alpha Tools</span><span class="lang-es">Alpha Tools</span></h1>
+<p class="lang-en">Alpha Tools takes a Mixamo-rigged character from Blender to a playable third-person character in Unreal Engine 5.8. It has two parts: the free Blender add-on <strong>Alpha Send to Unreal</strong> and the Unreal Engine plugin <strong>Alpha Tools</strong>. The add-on exports the FBX, the textures and a <code>manifest.json</code>. The plugin reads that export, sets up the materials, retargets the Mannequin animations and creates the Blueprints.</p>
+<p class="lang-es">Alpha Tools lleva un personaje con rig de Mixamo desde Blender hasta un personaje jugable en tercera persona en Unreal Engine 5.8. Tiene dos partes: el addon gratuito de Blender <strong>Alpha Send to Unreal</strong> y el plugin de Unreal Engine <strong>Alpha Tools</strong>. El addon exporta el FBX, las texturas y un <code>manifest.json</code>. El plugin lee esa exportación, configura los materiales, retargetea las animaciones del Mannequin y crea los Blueprints.</p>
+<h3><span class="lang-en">What it does</span><span class="lang-es">Qué hace</span></h3>
+<ul>
+    <li><span class="lang-en">Exports the character with a temporary <code>root</code> bone and copies the textures with standard names.</span><span class="lang-es">Exporta el personaje con un hueso <code>root</code> temporal y copia las texturas con nombres estándar.</span></li>
+    <li><span class="lang-en">Creates Material Instances in Unreal (PBR, glass, cutout, emissive) and assigns them to the character.</span><span class="lang-es">Crea Material Instances en Unreal (PBR, vidrio, cutout, emisivo) y las asigna al personaje.</span></li>
+    <li><span class="lang-en">Retargets the Manny animations to the Mixamo skeleton and creates an Animation Blueprint, a playable Character Blueprint and a GameMode that uses it.</span><span class="lang-es">Retargetea las animaciones de Manny al esqueleto de Mixamo y crea un Animation Blueprint, un Character Blueprint jugable y un GameMode que lo usa.</span></li>
+</ul>
+<h3><span class="lang-en">What it does not do</span><span class="lang-es">Qué no hace</span></h3>
+<ul>
+    <li><span class="lang-en">It only works with the Mixamo skeleton and only for third person for now.</span><span class="lang-es">Solo funciona con el esqueleto de Mixamo y, por ahora, solo en tercera persona.</span></li>
+    <li><span class="lang-en">It does not add bone physics (bottles, swords, ears, tails).</span><span class="lang-es">No añade física de huesos (botellas, espadas, orejas, colas).</span></li>
+    <li><span class="lang-en">It never modifies your original assets or the Third Person template: it creates copies.</span><span class="lang-es">Nunca modifica tus assets originales ni la plantilla Third Person: crea copias.</span></li>
+</ul>
+<div class="callout warning"><div class="callout-title"><span class="lang-en">Status</span><span class="lang-es">Estado</span></div>
+<p class="lang-en">The Unreal plugin (version 0.1.8) is marked as beta. Cutout and emissive materials are implemented but have not been verified in Unreal with a real model yet, and Foot IK on slopes is untested. See Known issues.</p>
+<p class="lang-es">El plugin de Unreal (versión 0.1.8) está marcado como beta. Los materiales cutout y emisivos están implementados pero aún no se han verificado en Unreal con un modelo real, y el Foot IK en pendientes no está probado. Consulta Problemas conocidos.</p></div>
+</section>
+
+<section id="requirements" class="content-section">
+<h2><span class="lang-en">Requirements</span><span class="lang-es">Requisitos</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>Blender 5.2 or newer</strong> with the Alpha Send to Unreal add-on. The plugin does not work without it.</span><span class="lang-es"><strong>Blender 5.2 o superior</strong> con el addon Alpha Send to Unreal. El plugin no funciona sin él.</span></li>
+    <li><span class="lang-en"><strong>Unreal Engine 5.8</strong> with the Third Person template content (the Manny mannequin and <code>BP_ThirdPersonCharacter</code>) in your project.</span><span class="lang-es"><strong>Unreal Engine 5.8</strong> con el contenido de la plantilla Third Person (el maniquí Manny y <code>BP_ThirdPersonCharacter</code>) en tu proyecto.</span></li>
+    <li><span class="lang-en">A character with the Mixamo skeleton.</span><span class="lang-es">Un personaje con el esqueleto de Mixamo.</span></li>
+    <li><span class="lang-en">The Python Script plugin enabled in Unreal (Alpha Tools enables it as a dependency).</span><span class="lang-es">El plugin Python Script activado en Unreal (Alpha Tools lo activa como dependencia).</span></li>
+</ul>
+</section>
+
+<section id="installation" class="content-section">
+<h2><span class="lang-en">Installation</span><span class="lang-es">Instalación</span></h2>
+<h3><span class="lang-en">Blender</span><span class="lang-es">Blender</span></h3>
+<ol>
+    <li><span class="lang-en">Remove older versions, then in Edit &gt; Preferences &gt; Get Extensions use the top-right dropdown &gt; <strong>Install from Disk</strong> and select the add-on ZIP.</span><span class="lang-es">Quita versiones anteriores y, en Edit &gt; Preferences &gt; Get Extensions, usa el menú desplegable de arriba a la derecha &gt; <strong>Install from Disk</strong> y selecciona el ZIP del addon.</span></li>
+    <li><span class="lang-en">The panel appears in the 3D Viewport sidebar (N), tab <strong>Send to Unreal</strong>.</span><span class="lang-es">El panel aparece en la barra lateral del 3D Viewport (N), pestaña <strong>Send to Unreal</strong>.</span></li>
+</ol>
+<h3><span class="lang-en">Unreal Engine</span><span class="lang-es">Unreal Engine</span></h3>
+<ol>
+    <li><span class="lang-en">Copy the <code>AlphaProductionsTools</code> folder into <code>&lt;your project&gt;/Plugins</code> (create <code>Plugins</code> if it does not exist). Install it once per project.</span><span class="lang-es">Copia la carpeta <code>AlphaProductionsTools</code> en <code>&lt;tu proyecto&gt;/Plugins</code> (crea <code>Plugins</code> si no existe). Se instala una vez por proyecto.</span></li>
+    <li><span class="lang-en">Open the project. If Unreal asks, enable <strong>Alpha Tools</strong> (Edit &gt; Plugins) and restart.</span><span class="lang-es">Abre el proyecto. Si Unreal lo pide, activa <strong>Alpha Tools</strong> (Edit &gt; Plugins) y reinicia.</span></li>
+    <li><span class="lang-en">The top menu bar now shows <strong>Alpha Tools</strong>.</span><span class="lang-es">La barra de menú superior ahora muestra <strong>Alpha Tools</strong>.</span></li>
+</ol>
+</section>
+
+<section id="workflow" class="content-section">
+<h2><span class="lang-en">Workflow</span><span class="lang-es">Flujo de trabajo</span></h2>
+<ol>
+    <li><span class="lang-en"><strong>Blender:</strong> select the armature or one of its meshes, open the <strong>Send to Unreal</strong> tab, set the export folder and click <strong>Send to Unreal</strong>. This creates a folder with the FBX, the textures and <code>manifest.json</code>.</span><span class="lang-es"><strong>Blender:</strong> selecciona el armature o una de sus mallas, abre la pestaña <strong>Send to Unreal</strong>, elige la carpeta de exportación y pulsa <strong>Send to Unreal</strong>. Se crea una carpeta con el FBX, las texturas y <code>manifest.json</code>.</span></li>
+    <li><span class="lang-en"><strong>Unreal:</strong> import that FBX into your project. Leave the export folder where it is: the plugin reads <code>manifest.json</code> and the textures from there.</span><span class="lang-es"><strong>Unreal:</strong> importa ese FBX en tu proyecto. Deja la carpeta de exportación donde está: el plugin lee de ahí <code>manifest.json</code> y las texturas.</span></li>
+    <li><span class="lang-en">Select the character's Skeletal Mesh in the Content Browser and run <strong>Alpha Tools &gt; 1. Materials from Blender</strong>.</span><span class="lang-es">Selecciona el Skeletal Mesh del personaje en el Content Browser y ejecuta <strong>Alpha Tools &gt; 1. Materials from Blender</strong>.</span></li>
+    <li><span class="lang-en">Select the Skeletal Mesh again and run <strong>Alpha Tools &gt; 2. Retarget animations + Blueprint</strong>.</span><span class="lang-es">Vuelve a seleccionar el Skeletal Mesh y ejecuta <strong>Alpha Tools &gt; 2. Retarget animations + Blueprint</strong>.</span></li>
+    <li><span class="lang-en">To play: open your level, go to World Settings &gt; GameMode Override and choose the new GameMode (<code>BP_&lt;name&gt;_GameMode</code>).</span><span class="lang-es">Para jugar: abre tu nivel, ve a World Settings &gt; GameMode Override y elige el nuevo GameMode (<code>BP_&lt;nombre&gt;_GameMode</code>).</span></li>
+</ol>
+<div class="callout warning"><div class="callout-title"><span class="lang-en">One step at a time, in order</span><span class="lang-es">Un paso a la vez y en orden</span></div>
+<p class="lang-en">Run the steps separately and in this order. Select the Skeletal Mesh before each one, because the selection is lost between steps.</p>
+<p class="lang-es">Ejecuta los pasos por separado y en este orden. Selecciona el Skeletal Mesh antes de cada uno, porque la selección se pierde entre pasos.</p></div>
+</section>
+
+<section id="menu" class="content-section">
+<h2><span class="lang-en">Alpha Tools menu in Unreal</span><span class="lang-es">Menú Alpha Tools en Unreal</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>1. Materials from Blender</strong>: imports the textures from the export folder, creates the Material Instances and assigns them to the mesh slots. Shared master materials are created in <code>/Game/AlphaTools/Materials</code>; the instances (<code>MI_&lt;material&gt;</code>) go in a <code>Materials</code> folder next to your mesh and the textures in a <code>Textures</code> folder.</span><span class="lang-es"><strong>1. Materials from Blender</strong>: importa las texturas de la carpeta de exportación, crea las Material Instances y las asigna a los slots de la malla. Los materiales maestros compartidos se crean en <code>/Game/AlphaTools/Materials</code>; las instancias (<code>MI_&lt;material&gt;</code>) van en una carpeta <code>Materials</code> junto a tu malla y las texturas en una carpeta <code>Textures</code>.</span></li>
+    <li><span class="lang-en"><strong>2. Retarget animations + Blueprint</strong>: retargets the Manny animations to your skeleton and creates <code>ABP_Unarmed_&lt;name&gt;</code> (in <code>/Game/&lt;character&gt;/Retarget/AnimBP</code>), a copy of <code>BP_ThirdPersonCharacter</code> named <code>BP_&lt;name&gt;_ThirdPerson</code> and a copy of <code>BP_ThirdPersonGameMode</code> named <code>BP_&lt;name&gt;_GameMode</code> with your character as Default Pawn Class. The <code>SK_</code> prefix is dropped in these names.</span><span class="lang-es"><strong>2. Retarget animations + Blueprint</strong>: retargetea las animaciones de Manny a tu esqueleto y crea <code>ABP_Unarmed_&lt;nombre&gt;</code> (en <code>/Game/&lt;personaje&gt;/Retarget/AnimBP</code>), una copia de <code>BP_ThirdPersonCharacter</code> llamada <code>BP_&lt;nombre&gt;_ThirdPerson</code> y una copia de <code>BP_ThirdPersonGameMode</code> llamada <code>BP_&lt;nombre&gt;_GameMode</code> con tu personaje como Default Pawn Class. El prefijo <code>SK_</code> se quita en estos nombres.</span></li>
+    <li><span class="lang-en"><strong>Manual</strong>: opens this manual in your browser.</span><span class="lang-es"><strong>Manual</strong>: abre este manual en tu navegador.</span></li>
+    <li><span class="lang-en"><strong>About Alpha Tools</strong>: shows the version, the requirements, the order of the steps and the contact email.</span><span class="lang-es"><strong>About Alpha Tools</strong>: muestra la versión, los requisitos, el orden de los pasos y el correo de contacto.</span></li>
+</ul>
+<div class="callout info"><div class="callout-title"><span class="lang-en">Where to see results</span><span class="lang-es">Dónde ver los resultados</span></div>
+<p class="lang-en">Results and warnings are written to the Output Log. Filter by <code>[PM]</code> (materials) or <code>[PL]</code> (retarget).</p>
+<p class="lang-es">Los resultados y avisos se escriben en el Output Log. Filtra por <code>[PM]</code> (materiales) o <code>[PL]</code> (retarget).</p></div>
+</section>
+
+<section id="transparency" class="content-section">
+<h2><span class="lang-en">Glass, cutout and emission</span><span class="lang-es">Vidrio, cutout y emisión</span></h2>
+<p class="lang-en">The Blender add-on lets you pick Default, Glass or Cutout for each material with alpha, and detects emission on the Principled BSDF. The plugin builds a matching master material.</p>
+<p class="lang-es">El addon de Blender te deja elegir Default, Glass o Cutout para cada material con alpha, y detecta emisión en el Principled BSDF. El plugin crea el material maestro correspondiente.</p>
+<ul>
+    <li><span class="lang-en"><strong>Glass</strong>: translucent material with <code>OpacityScale</code>, <code>EdgeOpacity</code> and <code>IOR</code> instance parameters. Verified in Unreal.</span><span class="lang-es"><strong>Glass</strong>: material translúcido con los parámetros de instancia <code>OpacityScale</code>, <code>EdgeOpacity</code> e <code>IOR</code>. Verificado en Unreal.</span></li>
+    <li><span class="lang-en"><strong>Cutout</strong>: masked, two-sided material. Implemented, not yet verified in Unreal with a real model.</span><span class="lang-es"><strong>Cutout</strong>: material enmascarado de doble cara. Implementado, aún no verificado en Unreal con un modelo real.</span></li>
+    <li><span class="lang-en"><strong>Emission</strong>: <code>EmissiveMap</code>, <code>EmissiveColor</code> and <code>EmissiveStrength</code> (0 by default). Implemented, not yet verified in Unreal with a real model.</span><span class="lang-es"><strong>Emisión</strong>: <code>EmissiveMap</code>, <code>EmissiveColor</code> y <code>EmissiveStrength</code> (0 por defecto). Implementado, aún no verificado en Unreal con un modelo real.</span></li>
+</ul>
+</section>
+
+<section id="changes" class="content-section">
+<h2><span class="lang-en">What it changes</span><span class="lang-es">Qué cambia</span></h2>
+<p class="lang-en"><strong>Blender:</strong> the temporary root bone and the temporary Glass splits are removed after the export; your scene is left as it was.</p>
+<p class="lang-es"><strong>Blender:</strong> el hueso root temporal y las divisiones temporales de Glass se eliminan tras exportar; tu escena queda como estaba.</p>
+<p class="lang-en"><strong>Unreal:</strong> creates assets only. Your originals and the Third Person template are never modified.</p>
+<p class="lang-es"><strong>Unreal:</strong> solo crea assets. Tus originales y la plantilla Third Person nunca se modifican.</p>
+<div class="callout danger"><div class="callout-title"><span class="lang-en">Do not delete Content/AlphaTools</span><span class="lang-es">No borres Content/AlphaTools</span></div>
+<p class="lang-en">The shared master materials live in <code>Content/AlphaTools</code>. Every character depends on them.</p>
+<p class="lang-es">Los materiales maestros compartidos viven en <code>Content/AlphaTools</code>. Todos los personajes dependen de ellos.</p></div>
+<div class="callout info"><div class="callout-title"><span class="lang-en">Unused default materials</span><span class="lang-es">Materiales por defecto sin uso</span></div>
+<p class="lang-en">Unreal's FBX import creates its own default materials (M_Body, M_Eyes…) that end up unused. After step 1, delete them by hand in the Content Browser. The Output Log lists which ones. The plugin never deletes them for you.</p>
+<p class="lang-es">La importación FBX de Unreal crea sus propios materiales por defecto (M_Body, M_Eyes…) que quedan sin uso. Tras el paso 1, bórralos a mano en el Content Browser. El Output Log indica cuáles son. El plugin nunca los borra por ti.</p></div>
+</section>
+
+<section id="faq" class="content-section">
+<h2><span class="lang-en">FAQ and troubleshooting</span><span class="lang-es">FAQ y solución de problemas</span></h2>
+<div class="accordion">
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">The Alpha Tools menu is missing</span><span class="lang-es">Falta el menú Alpha Tools</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The plugin is not in <code>&lt;project&gt;/Plugins/AlphaProductionsTools</code>, is not enabled (Edit &gt; Plugins) or Unreal was not restarted.</p><p class="lang-es">El plugin no está en <code>&lt;proyecto&gt;/Plugins/AlphaProductionsTools</code>, no está activado (Edit &gt; Plugins) o no se reinició Unreal.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">“Select your character's Skeletal Mesh in the Content Browser first”</span><span class="lang-es">“Select your character's Skeletal Mesh in the Content Browser first”</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Select the Skeletal Mesh asset (not the folder or the Static Mesh) and run the step again.</p><p class="lang-es">Selecciona el asset Skeletal Mesh (no la carpeta ni un Static Mesh) y ejecuta el paso de nuevo.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">“manifest.json not found next to the .fbx…”</span><span class="lang-es">“manifest.json not found next to the .fbx…”</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The plugin looks for <code>manifest.json</code> in the folder the FBX was imported from. Export again with Send to Unreal and import that FBX, and do not move or delete the export folder.</p><p class="lang-es">El plugin busca <code>manifest.json</code> en la carpeta de la que se importó el FBX. Exporta de nuevo con Send to Unreal e importa ese FBX, y no muevas ni borres la carpeta de exportación.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">“Texture import failed”</span><span class="lang-es">“Texture import failed”</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">A texture listed in the manifest is missing in the export folder. Export again from Blender.</p><p class="lang-es">Falta una textura listada en el manifest en la carpeta de exportación. Vuelve a exportar desde Blender.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">“Could not find Manny/Quinn under /Game/Characters/Mannequins/Meshes”</span><span class="lang-es">“Could not find Manny/Quinn under /Game/Characters/Mannequins/Meshes”</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The project needs the Third Person template content (Manny). Use a project created from the Third Person template, or migrate that content into your project.</p><p class="lang-es">El proyecto necesita el contenido de la plantilla Third Person (Manny). Usa un proyecto creado desde la plantilla Third Person, o migra ese contenido a tu proyecto.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">“No 'Hips' bone found: this does not look like a Mixamo skeleton”</span><span class="lang-es">“No 'Hips' bone found: this does not look like a Mixamo skeleton”</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Alpha Tools only supports the Mixamo skeleton.</p><p class="lang-es">Alpha Tools solo soporta el esqueleto de Mixamo.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">A step fails and I don't know why</span><span class="lang-es">Un paso falla y no sé por qué</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Open the Output Log and look for the red <code>[Alpha Tools] step failed</code> message and the lines tagged <code>[PM]</code> or <code>[PL]</code>. Send them to the contact email.</p><p class="lang-es">Abre el Output Log y busca el mensaje rojo <code>[Alpha Tools] step failed</code> y las líneas con <code>[PM]</code> o <code>[PL]</code>. Envíalas al correo de contacto.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Blender export errors and warnings</span><span class="lang-es">Errores y avisos de exportación en Blender</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">They are listed in the Alpha Send to Unreal manual (FAQ section).</p><p class="lang-es">Están listados en el manual de Alpha Send to Unreal (sección FAQ).</p></div></div></div>
+</div>
+</section>
+
+<section id="known" class="content-section">
+<h2><span class="lang-en">Known issues and limits</span><span class="lang-es">Problemas conocidos y límites</span></h2>
+<ul>
+    <li><span class="lang-en">Cutout and emissive materials have not been verified in Unreal with a real model yet.</span><span class="lang-es">Los materiales cutout y emisivos aún no se han verificado en Unreal con un modelo real.</span></li>
+    <li><span class="lang-en">Foot IK on slopes has not been tested.</span><span class="lang-es">El Foot IK en pendientes no se ha probado.</span></li>
+    <li><span class="lang-en">The Animation Blueprint can log a Control Rig warning about the 'Head' hierarchy.</span><span class="lang-es">El Animation Blueprint puede registrar un aviso del Control Rig sobre la jerarquía de 'Head'.</span></li>
+    <li><span class="lang-en">Bone physics for non-Mixamo bones (bottle, sword, ears, tail) is not included.</span><span class="lang-es">La física de huesos para huesos que no son de Mixamo (botella, espada, orejas, cola) no está incluida.</span></li>
+    <li><span class="lang-en">Third person only. First person is not supported.</span><span class="lang-es">Solo tercera persona. La primera persona no está soportada.</span></li>
+</ul>
+</section>
+
+<section id="changelog" class="content-section">
+<h2><span class="lang-en">Changelog</span><span class="lang-es">Registro de cambios</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>Plugin 0.1.8</strong>: shorter About dialog and a Manual entry in the menu.</span><span class="lang-es"><strong>Plugin 0.1.8</strong>: cuadro About más corto y entrada Manual en el menú.</span></li>
+    <li><span class="lang-en"><strong>Add-on 0.3.0</strong>: current version of Alpha Send to Unreal.</span><span class="lang-es"><strong>Addon 0.3.0</strong>: versión actual de Alpha Send to Unreal.</span></li>
+</ul>
+</section>
+
+<section id="support" class="content-section">
+<h2><span class="lang-en">Support and license</span><span class="lang-es">Soporte y licencia</span></h2>
+<p class="lang-en">Questions or problems: <strong>alphaproductions3d@gmail.com</strong>. Include your Blender and Unreal versions and the relevant Output Log lines.</p>
+<p class="lang-es">Preguntas o problemas: <strong>alphaproductions3d@gmail.com</strong>. Incluye tus versiones de Blender y Unreal y las líneas relevantes del Output Log.</p>
+<p class="lang-en">Alpha Tools is free software, licensed under GPL-3.0-or-later.</p>
+<p class="lang-es">Alpha Tools es software libre, con licencia GPL-3.0-or-later.</p>
+</section>
+
+        </div>
+    </main>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img class="lightbox-content" id="lightboxImg" src="" alt="Expanded Image" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const switchContainer = document.getElementById('langSwitch');
+            const langEnTxt = document.getElementById('langEnTxt');
+            const langEsTxt = document.getElementById('langEsTxt');
+
+            if(currentLang === 'es') {
+                switchContainer.classList.add('right'); langEsTxt.classList.add('active'); langEnTxt.classList.remove('active');
+            } else {
+                switchContainer.classList.remove('right'); langEnTxt.classList.add('active'); langEsTxt.classList.remove('active');
+            }
+
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.lang-es').forEach(el => el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block');
+            
+            if (currentLang === 'en') {
+                document.querySelectorAll('.lang-en').forEach(el => el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block');
+                document.querySelectorAll('.lang-es').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function copyCode(btn) {
+            const codeContent = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(codeContent).then(() => {
+                const originalText = btn.innerText; btn.innerText = "Copied!"; btn.style.background = "var(--alpha-orange)";
+                setTimeout(() => { btn.innerText = originalText; btn.style.background = "rgba(255,255,255,0.05)"; }, 2000);
+            });
+        }
+
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        function openLightbox(imgSrc) { lightboxImg.src = imgSrc; lightbox.classList.add('active'); }
+        function closeLightbox() { lightbox.classList.remove('active'); lightboxImg.src = ""; }
+
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const body = button.nextElementSibling;
+                const isActive = button.classList.contains('active');
+                
+                document.querySelectorAll('.accordion-header').forEach(otherBtn => {
+                    otherBtn.classList.remove('active');
+                    otherBtn.nextElementSibling.style.maxHeight = null;
+                });
+
+                if (!isActive) {
+                    button.classList.add('active');
+                    body.style.maxHeight = body.scrollHeight + "px";
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('.content-section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 150) current = section.getAttribute('id'); });
+            if ((window.innerHeight + Math.ceil(window.scrollY)) >= document.body.offsetHeight - 10) current = sections[sections.length - 1].getAttribute('id');
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

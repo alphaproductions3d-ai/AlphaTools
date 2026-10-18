@@ -1,0 +1,18 @@
+schema_version = "1.0.0"
+
+id = "alpha_send_to_unreal"
+version = "0.3.0"
+name = "Alpha Send to Unreal"
+tagline = "Export a Mixamo character to Unreal with root bone and textures"
+maintainer = "Noel / Alpha Productions <alphaproductions3d@gmail.com>"
+type = "add-on"
+
+blender_version_min = "5.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+copyright = ["2026 Alpha Productions"]
+
+tags = ["Game Engine", "Import-Export", "Rigging"]
+
+[permissions]
+files = "Write the FBX, the texture copies and a manifest.json to the export folder you choose"

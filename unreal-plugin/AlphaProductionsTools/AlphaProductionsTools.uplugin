@@ -1,0 +1,19 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1.8",
+  "FriendlyName": "Alpha Tools",
+  "Description": "Alpha Productions tools: Mixamo character setup for Unreal (materials, retarget, Blueprint). Works with the Alpha Send to Unreal add-on for Blender.",
+  "Category": "Alpha Productions",
+  "CreatedBy": "Alpha Productions",
+  "CreatedByURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": true,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "PythonScriptPlugin",
+      "Enabled": true
+    }
+  ]
+}

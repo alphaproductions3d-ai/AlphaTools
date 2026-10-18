@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Send to Unreal - Documentation</title>
+    <link rel="icon" href="assets/favicon_alpha_productions.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Alpha Brand */
+            --alpha-orange: #F25C22;
+            
+            /* Dark Theme Colors - Extra Dark Contrast */
+            --bg-base: #030508; 
+            --bg-sidebar: rgba(6, 9, 15, 0.85); 
+            --bg-header: rgba(3, 5, 8, 0.95);
+            --bg-card: #080c14; 
+            --bg-code: #05070a;
+            --text-main: #f3f4f6;
+            --text-muted: #8b95a5;
+            --border-color: rgba(255, 255, 255, 0.05);
+            
+            /* Callouts */
+            --warning-bg: rgba(245, 158, 11, 0.08);
+            --warning-border: #f59e0b;
+            --info-bg: rgba(59, 130, 246, 0.08);
+            --info-border: #3b82f6;
+            --danger-bg: rgba(239, 68, 68, 0.08);
+            --danger-border: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        h1 { font-size: 2.75rem; letter-spacing: -0.03em; margin-bottom: 1.5rem; font-weight: 700; }
+        h2 { font-size: 1.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin: 3rem 0 1.5rem 0; font-weight: 600; }
+        h3 { font-size: 1.25rem; margin: 2rem 0 1rem 0; font-weight: 600; color: var(--alpha-orange); }
+        p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.05rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.5rem; color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; }
+        strong { color: var(--text-main); font-weight: 600; }
+
+        /* SIDEBAR */
+        .sidebar { width: 300px; background: var(--bg-sidebar); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-right: 1px solid var(--border-color); position: fixed; height: 100vh; padding: 2.5rem 2rem; display: flex; flex-direction: column; z-index: 100; justify-content: space-between; overflow-y: auto;}
+        
+        .sidebar-top { display: flex; flex-direction: column; gap: 1rem; }
+        
+        .main-content { flex: 1; margin-left: 300px; display: flex; flex-direction: column; }
+        .content-container { max-width: 900px; padding: 2rem 4rem 40vh 4rem; }
+
+        .top-header { position: sticky; top: 0; background: var(--bg-header); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 4rem; display: flex; justify-content: flex-end; align-items: center; z-index: 90; }
+
+        /* MULTILINGUAL SWITCH ONLY */
+        .switch-container { display: flex; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 20px; padding: 3px; position: relative; cursor: pointer; align-items: center; width: 100px; }
+        .switch-option { flex: 1; padding: 0.3rem 0; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-align: center; border-radius: 18px; transition: color 0.3s ease; z-index: 2; }
+        .switch-option.active { color: #fff; }
+        .switch-slider { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: var(--alpha-orange); border-radius: 18px; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
+        .switch-container.right .switch-slider { transform: translateX(100%); }
+
+        .logo-container { margin-bottom: 2rem; }
+        .logo-container img { max-width: 180px; height: auto; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
+
+        .nav-links { list-style: none; margin-left: 0; flex-grow: 1; }
+        .nav-links li { margin-bottom: 0.25rem; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.95rem; display: block; padding: 0.6rem 1rem; border-radius: 8px; transition: all 0.2s ease; }
+        .nav-links a:hover { color: var(--text-main); background: rgba(255,255,255,0.03); }
+        .nav-links a.active { background: rgba(242, 92, 34, 0.1); color: var(--alpha-orange); font-weight: 600; }
+
+        /* SOCIAL HUB & FOOTER */
+        .sidebar-bottom { margin-top: 2rem; }
+        .sidebar, html { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+        .sidebar::-webkit-scrollbar, html::-webkit-scrollbar { width: 8px; }
+        .sidebar::-webkit-scrollbar-track, html::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb, html::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 8px; }
+        .sidebar::-webkit-scrollbar-thumb:hover, html::-webkit-scrollbar-thumb:hover { background: var(--alpha-orange); }
+
+        .social-hub { border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .social-hub-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-bottom: 1rem; }
+        .social-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        
+        .social-icon { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 50%; transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); text-decoration: none; overflow: hidden;}
+        .social-icon:hover { border-color: var(--alpha-orange); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(242, 92, 34, 0.2); }
+        
+        .social-icon svg { width: 18px; height: 18px; fill: var(--text-muted); transition: fill 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); stroke: none; }
+        .social-icon.stroke-icon svg { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; transition: stroke 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
+        
+        .social-icon:hover svg { fill: var(--alpha-orange); }
+        .social-icon.stroke-icon:hover svg { stroke: var(--alpha-orange); fill: none; }
+
+        .svg-external { 
+            width: 18px; height: 18px; 
+            filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(735%) hue-rotate(181deg) brightness(93%) contrast(89%);
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .social-icon:hover .svg-external {
+            filter: brightness(0) saturate(100%) invert(47%) sepia(87%) saturate(2405%) hue-rotate(346deg) brightness(99%) contrast(93%);
+        }
+        
+        .footer-copy { font-size: 0.75rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.5; }
+
+        /* COMPONENTS */
+        .callout { padding: 1.25rem 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid; background: var(--bg-card); }
+        .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; }
+        .callout.warning { background: var(--warning-bg); border-left-color: var(--warning-border); }
+        .callout.warning .callout-title { color: var(--warning-border); }
+        .callout.info { background: var(--info-bg); border-left-color: var(--info-border); }
+        .callout.info .callout-title { color: var(--info-border); }
+        .callout.danger { background: var(--danger-bg); border-left-color: var(--danger-border); }
+        .callout.danger .callout-title { color: var(--danger-border); }
+
+        .code-block { background: var(--bg-code); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; position: relative; margin: 1.5rem 0; font-family: monospace; font-size: 0.9rem; color: #e2e8f0; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.05); border: none; color: #fff; padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: background 0.2s; }
+        .copy-btn:hover { background: var(--alpha-orange); }
+
+        .img-container { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; margin: 1.5rem 0; cursor: zoom-in; background: var(--bg-card); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
+        .img-container img { width: 100%; display: block; transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .img-container:hover { border-color: var(--alpha-orange); box-shadow: 0 0 15px rgba(242, 92, 34, 0.4); }
+        .img-container:hover img { transform: scale(1.03); }
+
+        .video-container { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; margin: 2rem 0; background: #000; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .video-container video { width: 100%; display: block; }
+        
+        .accordion { margin-top: 1.5rem; }
+        .accordion-item { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; background: var(--bg-card); overflow: hidden; }
+        .accordion-header { width: 100%; padding: 1.25rem 1.5rem; background: transparent; border: none; color: var(--text-main); font-size: 1.05rem; font-weight: 600; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .accordion-header:hover { background: rgba(255, 255, 255, 0.02); }
+        .accordion-header::after { content: '+'; font-size: 1.5rem; font-weight: 400; color: var(--alpha-orange); transition: transform 0.3s ease; }
+        .accordion-header.active::after { transform: rotate(45deg); }
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content { padding: 0 1.5rem 1.25rem 1.5rem; color: var(--text-muted); }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(5px); }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+
+        .lang-es { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container">
+                <img src="assets/logo_alpha_productions.svg" alt="Alpha Productions Logo">
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#overview" class="active"><span class="lang-en">Overview</span><span class="lang-es">Resumen</span></a></li>
+                <li><a href="#requirements"><span class="lang-en">Requirements</span><span class="lang-es">Requisitos</span></a></li>
+                <li><a href="#installation"><span class="lang-en">Installation</span><span class="lang-es">Instalación</span></a></li>
+                <li><a href="#workflow"><span class="lang-en">Workflow</span><span class="lang-es">Flujo de trabajo</span></a></li>
+                <li><a href="#panel"><span class="lang-en">Panel reference</span><span class="lang-es">Referencia del panel</span></a></li>
+                <li><a href="#changes"><span class="lang-en">What it changes</span><span class="lang-es">Qué cambia</span></a></li>
+                <li><a href="#faq"><span class="lang-en">FAQ / Troubleshooting</span><span class="lang-es">FAQ / Problemas</span></a></li>
+                <li><a href="#changelog"><span class="lang-en">Changelog</span><span class="lang-es">Cambios</span></a></li>
+                <li><a href="#support"><span class="lang-en">Support & license</span><span class="lang-es">Soporte y licencia</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="social-hub">
+                <div class="social-hub-title"><span class="lang-en">Official Links</span><span class="lang-es">Enlaces Oficiales</span></div>
+                <div class="social-grid">
+                    <!-- YouTube (Inline SVG) -->
+                    <a href="https://www.youtube.com/@AlphaProductions-UE5-blen" target="_blank" class="social-icon" title="YouTube">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <!-- ArtStation (External SVG File) -->
+                    <a href="https://www.artstation.com/alpha-productions" target="_blank" class="social-icon" title="ArtStation">
+                        <img src="assets/icon_artstation.svg" class="svg-external" alt="ArtStation">
+                    </a>
+                    <!-- Sketchfab (Inline SVG) -->
+                    <a href="https://sketchfab.com/Alpha-Productions" target="_blank" class="social-icon stroke-icon" title="Sketchfab">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1.5L2 7.3v9.4L12 22.5l10-5.8V7.3L12 1.5zm0 2.2l8 4.6-8 4.6-8-4.6 8-4.6zm0 16.6l-8-4.6v-7l8 4.6v7zm1-7l8-4.6v7l-8 4.6v-7z"/></svg>
+                    </a>
+                    <!-- LinkedIn (Inline SVG) -->
+                    <a href="https://www.linkedin.com/in/noel-bolaños" target="_blank" class="social-icon" title="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm13.5 12.3h-3v-5.6c0-3.4-4-3.1-4 0v5.6h-3v-11h3v1.8c1.4-2.6 7-2.8 7 2.5v6.7z"/></svg>
+                    </a>
+                    <!-- Instagram (Inline SVG) -->
+                    <a href="https://www.instagram.com/alphaproductions_3d/" target="_blank" class="social-icon stroke-icon" title="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <!-- X (Inline SVG) -->
+                    <a href="https://x.com/AlphaProd3D" target="_blank" class="social-icon" title="X">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+                <div class="footer-copy">
+                    © 2026 Alpha Productions.<br>
+                    <span class="lang-en">All rights reserved.</span><span class="lang-es">Todos los derechos reservados.</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="switch-container" id="langSwitch" onclick="toggleLanguage()" title="Switch Language">
+                <div class="switch-slider"></div>
+                <div class="switch-option active" id="langEnTxt">EN</div>
+                <div class="switch-option" id="langEsTxt">ES</div>
+            </div>
+        </header>
+
+        <div class="content-container">
+            <section id="overview" class="content-section">
+<h1><span class="lang-en">Alpha Send to Unreal</span><span class="lang-es">Alpha Send to Unreal</span></h1>
+<p class="lang-en">Alpha Send to Unreal exports a Mixamo-rigged character from Blender in a form Unreal Engine can import. In one click it writes the FBX, copies the textures with standard names and creates a <code>manifest.json</code> that describes the materials.</p>
+<p class="lang-es">Alpha Send to Unreal exporta un personaje con rig de Mixamo desde Blender en un formato que Unreal Engine puede importar. Con un clic escribe el FBX, copia las texturas con nombres estándar y crea un <code>manifest.json</code> que describe los materiales.</p>
+<div class="callout info"><div class="callout-title"><span class="lang-en">Part of Alpha Tools</span><span class="lang-es">Parte de Alpha Tools</span></div>
+<p class="lang-en">This add-on is the Blender half of <strong>Alpha Tools</strong>. It is meant to be used together with the <strong>Alpha Tools plugin for Unreal Engine</strong>, which reads this export and builds the materials and the playable character. Both are published together on GitHub, each with its own manual.</p>
+<p class="lang-es">Este addon es la parte de Blender de <strong>Alpha Tools</strong>. Está pensado para usarse junto con el <strong>plugin Alpha Tools para Unreal Engine</strong>, que lee esta exportación y crea los materiales y el personaje jugable. Ambos se publican juntos en GitHub, cada uno con su manual.</p></div>
+<h3><span class="lang-en">What it does</span><span class="lang-es">Qué hace</span></h3>
+<ul>
+    <li><span class="lang-en">Adds a temporary <code>root</code> bone above Hips for the export (Unreal's retargeting expects it) and removes it afterwards.</span><span class="lang-es">Añade un hueso <code>root</code> temporal sobre Hips durante la exportación (el retargeting de Unreal lo espera) y lo elimina después.</span></li>
+    <li><span class="lang-en">Copies the Base Color, Normal, ORM and Emissive textures as <code>&lt;Material&gt;_BaseColor</code>, <code>_Normal</code>, <code>_ORM</code> and <code>_Emissive</code>.</span><span class="lang-es">Copia las texturas Base Color, Normal, ORM y Emissive como <code>&lt;Material&gt;_BaseColor</code>, <code>_Normal</code>, <code>_ORM</code> y <code>_Emissive</code>.</span></li>
+    <li><span class="lang-en">Lets you choose how each transparent material is used: Default, Glass or Cutout.</span><span class="lang-es">Te deja elegir cómo se usa cada material transparente: Default, Glass o Cutout.</span></li>
+</ul>
+<h3><span class="lang-en">What it does not do</span><span class="lang-es">Qué no hace</span></h3>
+<ul>
+    <li><span class="lang-en">It only supports the Mixamo skeleton.</span><span class="lang-es">Solo soporta el esqueleto de Mixamo.</span></li>
+    <li><span class="lang-en">It does not export animations (the Unreal plugin retargets the Mannequin animations).</span><span class="lang-es">No exporta animaciones (el plugin de Unreal retargetea las animaciones del Mannequin).</span></li>
+    <li><span class="lang-en">It does not bake or edit textures, and it does not support UDIM tiles.</span><span class="lang-es">No hace bake ni edita texturas, y no soporta tiles UDIM.</span></li>
+</ul>
+</section>
+
+<section id="requirements" class="content-section">
+<h2><span class="lang-en">Requirements</span><span class="lang-es">Requisitos</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>Blender 5.2 or newer.</strong> The normal map convention differs between Blender versions, so older ones are not supported.</span><span class="lang-es"><strong>Blender 5.2 o superior.</strong> La convención de normal maps cambia entre versiones de Blender, por eso las anteriores no están soportadas.</span></li>
+    <li><span class="lang-en">A character with the Mixamo skeleton and at least one visible mesh bound to the armature (Armature modifier).</span><span class="lang-es">Un personaje con el esqueleto de Mixamo y al menos una malla visible ligada al armature (modificador Armature).</span></li>
+    <li><span class="lang-en">Materials with a Principled BSDF whose textures are Image Texture nodes connected directly.</span><span class="lang-es">Materiales con Principled BSDF cuyas texturas son nodos Image Texture conectados directamente.</span></li>
+    <li><span class="lang-en">NumPy (included with Blender) is used only to separate the solid parts of Glass materials.</span><span class="lang-es">NumPy (incluido en Blender) solo se usa para separar las partes sólidas de los materiales Glass.</span></li>
+</ul>
+</section>
+
+<section id="installation" class="content-section">
+<h2><span class="lang-en">Installation</span><span class="lang-es">Instalación</span></h2>
+<ol>
+    <li><span class="lang-en">Remove any older version of the add-on (Edit &gt; Preferences &gt; Get Extensions).</span><span class="lang-es">Quita cualquier versión anterior del addon (Edit &gt; Preferences &gt; Get Extensions).</span></li>
+    <li><span class="lang-en">In Get Extensions, open the dropdown at the top right and choose <strong>Install from Disk</strong>. Select <code>alpha_send_to_unreal-0.3.0.zip</code>.</span><span class="lang-es">En Get Extensions, abre el menú desplegable de arriba a la derecha y elige <strong>Install from Disk</strong>. Selecciona <code>alpha_send_to_unreal-0.3.0.zip</code>.</span></li>
+    <li><span class="lang-en">Make sure the add-on is enabled.</span><span class="lang-es">Comprueba que el addon esté activado.</span></li>
+    <li><span class="lang-en">In the 3D Viewport press <strong>N</strong> and open the <strong>Send to Unreal</strong> tab.</span><span class="lang-es">En el 3D Viewport pulsa <strong>N</strong> y abre la pestaña <strong>Send to Unreal</strong>.</span></li>
+</ol>
+</section>
+
+<section id="workflow" class="content-section">
+<h2><span class="lang-en">Workflow</span><span class="lang-es">Flujo de trabajo</span></h2>
+<ol>
+    <li><span class="lang-en">Save your .blend file, or choose an Export Folder.</span><span class="lang-es">Guarda tu archivo .blend, o elige una carpeta de exportación.</span></li>
+    <li><span class="lang-en">Be in Object Mode and select the armature or one of its meshes.</span><span class="lang-es">Estate en Object Mode y selecciona el armature o una de sus mallas.</span></li>
+    <li><span class="lang-en">In <strong>Transparency</strong>, set Default, Glass or Cutout for each material that has alpha.</span><span class="lang-es">En <strong>Transparency</strong>, elige Default, Glass o Cutout para cada material que tenga alpha.</span></li>
+    <li><span class="lang-en">Click <strong>Send to Unreal</strong>.</span><span class="lang-es">Pulsa <strong>Send to Unreal</strong>.</span></li>
+    <li><span class="lang-en">The add-on creates a folder <code>SK_&lt;name&gt;</code> with <code>SK_&lt;name&gt;.fbx</code>, a <code>textures</code> folder and <code>manifest.json</code>.</span><span class="lang-es">El addon crea una carpeta <code>SK_&lt;nombre&gt;</code> con <code>SK_&lt;nombre&gt;.fbx</code>, una carpeta <code>textures</code> y <code>manifest.json</code>.</span></li>
+    <li><span class="lang-en">Continue in Unreal Engine with the Alpha Tools plugin (see its manual).</span><span class="lang-es">Continúa en Unreal Engine con el plugin Alpha Tools (consulta su manual).</span></li>
+</ol>
+<div class="callout warning"><div class="callout-title"><span class="lang-en">Keep the export folder</span><span class="lang-es">Conserva la carpeta de exportación</span></div>
+<p class="lang-en">Import the FBX into Unreal from this folder and leave the folder where it is. The Unreal plugin finds <code>manifest.json</code> and the textures next to the original FBX. If you move or delete the folder, run the export again.</p>
+<p class="lang-es">Importa el FBX en Unreal desde esta carpeta y déjala donde está. El plugin de Unreal busca <code>manifest.json</code> y las texturas junto al FBX original. Si mueves o borras la carpeta, vuelve a exportar.</p></div>
+</section>
+
+<section id="panel" class="content-section">
+<h2><span class="lang-en">Panel reference</span><span class="lang-es">Referencia del panel</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>Export Folder</strong> (default <code>//</code>): where the character folder is created. <code>//</code> means next to the saved .blend.</span><span class="lang-es"><strong>Export Folder</strong> (por defecto <code>//</code>): dónde se crea la carpeta del personaje. <code>//</code> significa junto al .blend guardado.</span></li>
+    <li><span class="lang-en"><strong>Name</strong>: character name. Empty uses the first mesh name. <code>SK_</code> is added in front when it is missing.</span><span class="lang-es"><strong>Name</strong>: nombre del personaje. Vacío usa el nombre de la primera malla. Se añade <code>SK_</code> delante si falta.</span></li>
+    <li><span class="lang-en"><strong>Add Root Bone</strong> (on by default): adds a temporary <code>root</code> and removes it after the export. If the armature already has a <code>root</code> bone, none is added.</span><span class="lang-es"><strong>Add Root Bone</strong> (activado por defecto): añade un <code>root</code> temporal y lo elimina tras exportar. Si el armature ya tiene un hueso <code>root</code>, no se añade otro.</span></li>
+    <li><span class="lang-en"><strong>Open Folder After Export</strong> (off by default): shows the export folder in your file browser.</span><span class="lang-es"><strong>Open Folder After Export</strong> (desactivado por defecto): muestra la carpeta de exportación en tu explorador de archivos.</span></li>
+    <li><span class="lang-en"><strong>Support &gt; Documentation</strong>: opens this manual in your browser.</span><span class="lang-es"><strong>Support &gt; Documentation</strong>: abre este manual en tu navegador.</span></li>
+</ul>
+<h3><span class="lang-en">Transparency</span><span class="lang-es">Transparency</span></h3>
+<p class="lang-en">Only materials that have alpha are listed.</p>
+<p class="lang-es">Solo se listan los materiales que tienen alpha.</p>
+<ul>
+    <li><span class="lang-en"><strong>Default (ignore alpha)</strong>: exported as a normal opaque material.</span><span class="lang-es"><strong>Default (ignore alpha)</strong>: se exporta como un material opaco normal.</span></li>
+    <li><span class="lang-en"><strong>Glass (translucent)</strong>: for glass, liquids and clear plastic. Solid parts in the same material (cork, metal, leather…) are separated automatically while exporting; your scene is not changed.</span><span class="lang-es"><strong>Glass (translucent)</strong>: para vidrio, líquidos y plástico transparente. Las partes sólidas del mismo material (corcho, metal, cuero…) se separan automáticamente al exportar; tu escena no cambia.</span></li>
+    <li><span class="lang-en"><strong>Cutout (alpha clip)</strong>: for leaves, hair cards, fences and flags. Transparent areas are cut away and the material is two-sided.</span><span class="lang-es"><strong>Cutout (alpha clip)</strong>: para hojas, hair cards, vallas y banderas. Las zonas transparentes se recortan y el material es de doble cara.</span></li>
+</ul>
+</section>
+
+<section id="changes" class="content-section">
+<h2><span class="lang-en">What it changes in the scene</span><span class="lang-es">Qué cambia en la escena</span></h2>
+<p class="lang-en">Nothing is left behind. The temporary <code>root</code> bone and the temporary Glass splits are removed even if the export fails. Your original images are not modified.</p>
+<p class="lang-es">No queda nada. El hueso <code>root</code> temporal y las divisiones temporales de Glass se eliminan incluso si la exportación falla. Tus imágenes originales no se modifican.</p>
+<p class="lang-en">Files written, all inside the export folder: the FBX, copies of the textures and <code>manifest.json</code>.</p>
+<p class="lang-es">Archivos escritos, todos dentro de la carpeta de exportación: el FBX, copias de las texturas y <code>manifest.json</code>.</p>
+</section>
+
+<section id="faq" class="content-section">
+<h2><span class="lang-en">FAQ and troubleshooting</span><span class="lang-es">FAQ y solución de problemas</span></h2>
+<h3><span class="lang-en">Errors (the export stops)</span><span class="lang-es">Errores (la exportación se detiene)</span></h3>
+<div class="accordion">
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Nothing is selected</span><span class="lang-es">No hay nada seleccionado</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Select the character's armature or one of its meshes.</p><p class="lang-es">Selecciona el armature del personaje o una de sus mallas.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Switch to Object Mode</span><span class="lang-es">Cambia a Object Mode</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The export only runs in Object Mode.</p><p class="lang-es">La exportación solo funciona en Object Mode.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Armature is hidden / No visible mesh</span><span class="lang-es">El armature está oculto / No hay malla visible</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Show the armature and the meshes you want to export. Hidden meshes are skipped.</p><p class="lang-es">Muestra el armature y las mallas que quieres exportar. Las mallas ocultas se omiten.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Mesh is not bound to an armature</span><span class="lang-es">La malla no está ligada a un armature</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The mesh needs an Armature modifier or a parent armature.</p><p class="lang-es">La malla necesita un modificador Armature o un armature como padre.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Save the .blend file first, or choose an export folder</span><span class="lang-es">Guarda el .blend primero, o elige una carpeta de exportación</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">The default folder <code>//</code> is relative to the saved .blend. Save the file or choose a folder.</p><p class="lang-es">La carpeta por defecto <code>//</code> es relativa al .blend guardado. Guarda el archivo o elige una carpeta.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">UDIM tiles are not supported</span><span class="lang-es">Los tiles UDIM no están soportados</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Use a normal single image for that material.</p><p class="lang-es">Usa una imagen normal única para ese material.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Mesh has no UV map (Glass)</span><span class="lang-es">La malla no tiene UV map (Glass)</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Glass needs UVs to separate its solid faces. Add a UV map or use another alpha mode.</p><p class="lang-es">Glass necesita UVs para separar sus caras sólidas. Añade un UV map o usa otro modo de alpha.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">NumPy is not available</span><span class="lang-es">NumPy no está disponible</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Glass needs NumPy, which normally ships with Blender. Use another alpha mode or reinstall Blender.</p><p class="lang-es">Glass necesita NumPy, que normalmente viene con Blender. Usa otro modo de alpha o reinstala Blender.</p></div></div></div>
+</div>
+<h3><span class="lang-en">Warnings (the export continues)</span><span class="lang-es">Avisos (la exportación continúa)</span></h3>
+<div class="accordion">
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Non-uniform scale</span><span class="lang-es">Escala no uniforme</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Apply the scale (Ctrl+A) if the character looks stretched in Unreal.</p><p class="lang-es">Aplica la escala (Ctrl+A) si el personaje se ve estirado en Unreal.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Mesh only parented to the armature</span><span class="lang-es">Malla solo con armature como padre</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Without an Armature modifier the mesh may not deform.</p><p class="lang-es">Sin modificador Armature la malla puede no deformarse.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Several top-level bones</span><span class="lang-es">Varios huesos de nivel superior</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Unreal may import the skeleton oddly.</p><p class="lang-es">Unreal puede importar el esqueleto de forma extraña.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Base Color or Normal goes through another node</span><span class="lang-es">Base Color o Normal pasan por otro nodo</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Connect an Image Texture directly to Base Color, and a Normal Map node (with an image) to Normal. Otherwise that texture is not exported.</p><p class="lang-es">Conecta una Image Texture directamente a Base Color, y un nodo Normal Map (con imagen) a Normal. Si no, esa textura no se exporta.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Roughness and Metallic use different images</span><span class="lang-es">Roughness y Metallic usan imágenes distintas</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Only the Roughness image is exported.</p><p class="lang-es">Solo se exporta la imagen de Roughness.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Base Color is a JPEG with alpha mode set</span><span class="lang-es">Base Color es un JPEG con modo de alpha</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">JPEG cannot store transparency. Use PNG or another format with alpha.</p><p class="lang-es">JPEG no guarda transparencia. Usa PNG u otro formato con alpha.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-header"><span class="lang-en">Alpha mode set but alpha not connected</span><span class="lang-es">Modo de alpha activo pero alpha sin conectar</span></button><div class="accordion-body"><div class="accordion-content"><p class="lang-en">Connect the Base Color image's Alpha output to the BSDF Alpha input.</p><p class="lang-es">Conecta la salida Alpha de la imagen de Base Color a la entrada Alpha del BSDF.</p></div></div></div>
+</div>
+</section>
+
+<section id="changelog" class="content-section">
+<h2><span class="lang-en">Changelog</span><span class="lang-es">Registro de cambios</span></h2>
+<ul>
+    <li><span class="lang-en"><strong>0.3.0</strong>: current version. First public release of the add-on.</span><span class="lang-es"><strong>0.3.0</strong>: versión actual. Primera publicación del addon.</span></li>
+</ul>
+</section>
+
+<section id="support" class="content-section">
+<h2><span class="lang-en">Support and license</span><span class="lang-es">Soporte y licencia</span></h2>
+<p class="lang-en">Questions or problems: <strong>alphaproductions3d@gmail.com</strong>. Please include your Blender version and the message shown by the add-on.</p>
+<p class="lang-es">Preguntas o problemas: <strong>alphaproductions3d@gmail.com</strong>. Incluye tu versión de Blender y el mensaje que muestra el addon.</p>
+<p class="lang-en">Alpha Send to Unreal is free software, licensed under GPL-3.0-or-later.</p>
+<p class="lang-es">Alpha Send to Unreal es software libre, con licencia GPL-3.0-or-later.</p>
+</section>
+
+        </div>
+    </main>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img class="lightbox-content" id="lightboxImg" src="" alt="Expanded Image" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const switchContainer = document.getElementById('langSwitch');
+            const langEnTxt = document.getElementById('langEnTxt');
+            const langEsTxt = document.getElementById('langEsTxt');
+
+            if(currentLang === 'es') {
+                switchContainer.classList.add('right'); langEsTxt.classList.add('active'); langEnTxt.classList.remove('active');
+            } else {
+                switchContainer.classList.remove('right'); langEnTxt.classList.add('active'); langEsTxt.classList.remove('active');
+            }
+
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.lang-es').forEach(el => el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block');
+            
+            if (currentLang === 'en') {
+                document.querySelectorAll('.lang-en').forEach(el => el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block');
+                document.querySelectorAll('.lang-es').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function copyCode(btn) {
+            const codeContent = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(codeContent).then(() => {
+                const originalText = btn.innerText; btn.innerText = "Copied!"; btn.style.background = "var(--alpha-orange)";
+                setTimeout(() => { btn.innerText = originalText; btn.style.background = "rgba(255,255,255,0.05)"; }, 2000);
+            });
+        }
+
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        function openLightbox(imgSrc) { lightboxImg.src = imgSrc; lightbox.classList.add('active'); }
+        function closeLightbox() { lightbox.classList.remove('active'); lightboxImg.src = ""; }
+
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const body = button.nextElementSibling;
+                const isActive = button.classList.contains('active');
+                
+                document.querySelectorAll('.accordion-header').forEach(otherBtn => {
+                    otherBtn.classList.remove('active');
+                    otherBtn.nextElementSibling.style.maxHeight = null;
+                });
+
+                if (!isActive) {
+                    button.classList.add('active');
+                    body.style.maxHeight = body.scrollHeight + "px";
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('.content-section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 150) current = section.getAttribute('id'); });
+            if ((window.innerHeight + Math.ceil(window.scrollY)) >= document.body.offsetHeight - 10) current = sections[sections.length - 1].getAttribute('id');
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
